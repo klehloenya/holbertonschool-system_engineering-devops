@@ -1,0 +1,130 @@
+# Secured and Monitored Web Infrastructure for www.foobar.com
+
+## Infrastructure Diagram
+```
+                                        HTTPS Request
+                              User -----------------------> DNS
+                                                            |
+                                                            v
+                                                     Load Balancer
+                                                   (SSL Termination)
+                                                    + Firewall 1
+                                                    + Monitor 1
+                                                          |
+                              +-------------------------+--------------------------+
+                              |                         |                         |
+                         Server 1                   Server 2                  Server 3
+                     + Firewall 2                + Firewall 3               + Firewall 4
+                     + Monitor 2                 + Monitor 3                + Monitor 4
+                     +--------------+           +--------------+           +--------------+
+                     | Nginx        |           | Nginx        |           | Nginx        |
+                     | App Server   |           | App Server   |           | App Server   |
+                     | MySQL        |           | MySQL        |           | MySQL        |
+                     +--------------+           +--------------+           +--------------+
+```
+
+## Additional Elements Explanation
+
+### 1. Firewalls
+- **Purpose**: Security barrier between networks
+- **Implementation**:
+  - Firewall 1: Protects load balancer
+  - Firewall 2-4: Protects individual servers
+- **Functions**:
+  - Filter incoming/outgoing traffic
+  - Prevent unauthorized access
+  - Block malicious requests
+  - Control traffic flow
+
+### 2. SSL Certificate
+- **Purpose**: Enable HTTPS encryption
+- **Implementation**: 
+  - Installed at load balancer
+  - Encrypts data in transit
+- **Benefits**:
+  - Data privacy
+  - Authentication
+  - Data integrity
+  - Compliance requirements
+
+### 3. Monitoring Clients
+- **Purpose**: Track system health and performance
+- **Implementation**:
+  - Monitor 1: Load balancer metrics
+  - Monitor 2-4: Server-specific metrics
+- **Data Collection**:
+  - System metrics (CPU, memory, disk)
+  - Application logs
+  - Network traffic
+  - Error rates
+  - Response times
+
+## Monitoring Specifics
+
+### Data Collection Methods
+1. Agent-based collection
+   - Installed on each server
+   - Collects system metrics
+   - Sends to monitoring service
+
+2. Log aggregation
+   - Collects application logs
+   - Centralizes log storage
+   - Enables log analysis
+
+### Web Server QPS Monitoring
+1. Configure Nginx access log format
+2. Use monitoring tool to parse logs
+3. Set up QPS metrics collection
+4. Create QPS dashboards
+5. Set up QPS alerts
+
+## Infrastructure Issues
+
+### 1. SSL Termination at Load Balancer
+- **Issues**:
+  - Internal traffic unencrypted
+  - Security risk within infrastructure
+  - Compliance concerns
+  - Single point of encryption/decryption
+
+### 2. Single MySQL Write Server
+- **Issues**:
+  - Single point of failure for writes
+  - Write capacity limitations
+  - No write failover
+  - Potential data loss risk
+
+### 3. Identical Server Components
+- **Issues**:
+  - Resource competition
+  - Inefficient resource utilization
+  - Maintenance complexity
+  - Scaling inflexibility
+  - Single point of failure per server
+
+## Recommended Improvements
+
+### 1. Security
+- End-to-end encryption
+- Network segmentation
+- Regular security audits
+- Intrusion detection systems
+
+### 2. Database
+- Master-Master replication
+- Write load distribution
+- Automated failover
+- Regular backups
+
+### 3. Server Specialization
+- Separate database servers
+- Dedicated application servers
+- Specialized resource allocation
+- Component-based scaling
+
+### 4. Monitoring Enhancements
+- Predictive analytics
+- Automated responses
+- Custom alerting
+- Performance trending
