@@ -1,0 +1,94 @@
+# Simple Web Stack Infrastructure Design
+
+## Infrastructure Diagram
+```
+                                           Server (8.8.8.8)
+                                           +--------------------------+
+                                           |                          |
+User Request                               |     Nginx Web Server     |
+(www.foobar.com) -----> DNS Resolution ---|->   (Listens on :80)    |
+                                           |           |             |
+                                           |           v             |
+                                           |  Application Server     |
+                                           |    (Process Code)       |
+                                           |           |             |
+                                           |           v             |
+                                           |    MySQL Database       |
+                                           |                          |
+                                           +--------------------------+
+```
+
+## Component Explanations
+
+### Server
+- A physical or virtual machine that hosts all components
+- Provides computing resources (CPU, RAM, Storage) to run the web services
+- IP Address: 8.8.8.8
+
+### Domain Name (foobar.com)
+- Purpose: Provides a human-readable address to access the website
+- DNS Record: 'www' is a CNAME record pointing to foobar.com
+- DNS A Record maps foobar.com to IP 8.8.8.8
+
+### Web Server (Nginx)
+- Handles incoming HTTP requests
+- Serves static content
+- Manages SSL/TLS encryption
+- Routes requests to application server
+- Load balancing (if configured)
+
+### Application Server
+- Executes the application's business logic
+- Processes dynamic content
+- Handles application state
+- Communicates with database
+- Runs the actual codebase
+
+### Database (MySQL)
+- Stores persistent data
+- Manages data relationships
+- Handles data queries
+- Ensures data integrity
+- Manages user data, content, etc.
+
+### Client-Server Communication
+- Uses HTTP/HTTPS protocol
+- TCP/IP for network communication
+- Request-Response cycle
+- Stateless communication
+
+## Infrastructure Issues
+
+### Single Point of Failure (SPOF)
+1. Single Server: If it fails, entire site goes down
+2. Single Database: No backup if database crashes
+3. Single Web Server: No redundancy for web service
+4. Single Application Server: No failover capability
+
+### Maintenance Downtime
+1. Code deployments require server restart
+2. Database updates need system downtime
+3. Server patches/updates require reboot
+4. No redundancy during maintenance
+
+### Scalability Limitations
+1. Single server can't handle high traffic loads
+2. No load balancing capability
+3. Limited resource scaling options
+4. Database performance bottlenecks
+5. No distributed processing capability
+
+## Security Concerns (Additional)
+1. No firewall mentioned
+2. No HTTPS encryption specified
+3. Single point for security breaches
+4. No separation of concerns for security
+
+## Recommendations
+1. Add redundant servers
+2. Implement load balancing
+3. Set up database replication
+4. Add firewall and security measures
+5. Implement CDN for static content
+6. Set up monitoring systems
+7. Add backup systems

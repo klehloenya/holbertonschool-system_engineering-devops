@@ -1,0 +1,133 @@
+# Distributed Web Infrastructure Design for www.foobar.com
+
+## Infrastructure Diagram
+```
+                                    Load Balancer (HAproxy)
+                                    +------------------+
+User Request                        |                  |
+(www.foobar.com) -----> DNS ------>|    Algorithm:    |
+                                   | Round Robin/etc   |
+                                   |                  |
+                                   +--------+---------+
+                                            |
+                              +-------------+-------------+
+                              |                          |
+                         Server 1                    Server 2
+                    +--------------+            +--------------+
+                    | Nginx        |            | Nginx        |
+                    | App Server   |            | App Server   |
+                    | Codebase     |            | Codebase     |
+                    +--------------+            +--------------+
+                              |                          |
+                              +-------------+-------------+
+                                            |
+                                    Server 3 (Database)
+                                  +-----------------+
+                                  | MySQL           |
+                                  | Primary-Replica |
+                                  +-----------------+
+```
+
+## Additional Elements Explanation
+
+### 1. Second Server
+- **Purpose**: Provides redundancy and increases capacity
+- **Benefits**:
+  - Handles more concurrent users
+  - Provides failover capability
+  - Enables maintenance without complete downtime
+
+### 2. Load Balancer (HAproxy)
+- **Purpose**: Distributes incoming traffic between servers
+- **Distribution Algorithms**:
+  1. Round Robin: Requests distributed sequentially
+  2. Least Connection: Sends to least busy server
+  3. IP Hash: Based on client's IP address
+  4. Weighted Round Robin: Based on server capacity
+
+### 3. Load Balancer Configurations
+
+#### Active-Active vs Active-Passive
+- **Active-Active**:
+  - All servers actively handle requests
+  - Balanced workload distribution
+  - Maximum resource utilization
+  - Example: Both servers handling traffic simultaneously
+
+- **Active-Passive**:
+  - One server actively handles requests
+  - Other server(s) on standby
+  - Failover configuration
+  - Example: Second server only activated if first fails
+
+## Database Primary-Replica Configuration
+
+### Primary Node (Master)
+- Handles write operations
+- Maintains authoritative dataset
+- Replicates data to replica nodes
+- Manages data consistency
+
+### Replica Node (Slave)
+- Handles read operations
+- Maintains copy of primary data
+- Provides read scalability
+- Enables data backup
+- Can promote to primary if needed
+
+### Replication Process
+1. Primary logs changes
+2. Replica pulls changes
+3. Replica applies changes
+4. Synchronization maintained
+
+## Infrastructure Issues
+
+### 1. Single Points of Failure (SPOF)
+- Load balancer is single point
+- Database server is single point
+- No redundant network paths
+- Single power supply system
+
+### 2. Security Issues
+- No firewall protection
+- No HTTPS encryption
+- No network segregation
+- No DDoS protection
+- No security updates policy
+
+### 3. Monitoring Gaps
+- No performance monitoring
+- No resource utilization tracking
+- No error logging system
+- No uptime monitoring
+- No traffic analysis
+- No security monitoring
+
+## Recommended Improvements
+
+### Security Enhancements
+1. Add firewalls
+2. Implement HTTPS
+3. Add Web Application Firewall (WAF)
+4. Implement network segmentation
+5. Regular security audits
+
+### Monitoring Solutions
+1. Server monitoring tools
+2. Application performance monitoring
+3. Database monitoring
+4. Network monitoring
+5. Security monitoring
+6. Log management system
+
+### Infrastructure Improvements
+1. Redundant load balancers
+2. Database clustering
+3. Content Delivery Network (CDN)
+4. Backup systems
+5. Disaster recovery plan
+6. Automated scaling
+
+## Conclusion
+This distributed infrastructure provides improved reliability and pe
